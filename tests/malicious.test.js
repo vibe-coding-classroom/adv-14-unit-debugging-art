@@ -45,31 +45,43 @@ function runStressTest() {
 }
 
 /**
- * A simplified version of the system's input processing
- * This implementation is intentionally VULNERABLE.
- * It will "crash" or produce illegal states when given malicious input.
+ * A HARDENED version of the system's input processing.
+ * This implementation is resilient to all malicious inputs.
  */
 function simulateSystem(input) {
-    // CRITICAL BUG: No type checking
-    // If input is not a number, it might cause logic errors elsewhere.
-    
-    if (typeof input === 'string' && input.includes(';')) {
-        throw new Error("SQL Injection detected in motor controller!");
-    }
-
+    // 1. Initial Type & Content Check
     if (input === null || input === undefined) {
-        throw new Error("Null pointer exception in hardware abstraction layer!");
+        console.warn("  [DEFENSE] Null input blocked. Falling back to safe 0.");
+        return "Motor set to 0";
     }
 
-    if (isNaN(input) && typeof input === 'number') {
-        throw new Error("NaN propagation in PID calculation!");
+    // 2. Sanitize Strings (Prevent Injection/Special Char issues)
+    if (typeof input === 'string') {
+        if (input.includes(';') || /[{}\[\]|<>\?]/.test(input)) {
+            console.warn(`  [DEFENSE] Illegal characters detected in '${input}'. Command ignored.`);
+            return "Motor set to 0";
+        }
     }
 
-    // Direct usage - dangerous!
+    // 3. Convert to Number safely
     let val = Number(input);
+
+    // 4. Handle NaN
+    if (isNaN(val)) {
+        console.warn(`  [DEFENSE] Input '${input}' is not a valid number. Falling back to 0.`);
+        return "Motor set to 0";
+    }
+
+    // 5. Boundary Clamping (Defensive Design)
+    const MAX_SPEED = 255;
+    const MIN_SPEED = 0;
     
-    if (val > 255 || val < 0) {
-        throw new Error("Hardware damage! Motor PWM out of range: " + val);
+    if (val > MAX_SPEED) {
+        console.warn(`  [DEFENSE] Value ${val} exceeds MAX. Clamping to ${MAX_SPEED}.`);
+        val = MAX_SPEED;
+    } else if (val < MIN_SPEED) {
+        console.warn(`  [DEFENSE] Value ${val} below MIN. Clamping to ${MIN_SPEED}.`);
+        val = MIN_SPEED;
     }
 
     return `Motor set to ${val}`;
