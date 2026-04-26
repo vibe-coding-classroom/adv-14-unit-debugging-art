@@ -1,5 +1,3 @@
-Viewed adv-14-unit-debugging-art.html:1-385
-
 針對 **`adv-14-unit-debugging-art` (除錯藝術)** 單元，這是從「學生」邁向「高階工程師」的最終心態轉型。它不只是教如何修好 Bug，更是教如何建立一套嚴謹的 **科學除錯流程** 以及 **防禦性程式設計 (Defensive Design)** 體系。這是在複雜系統（如 Vibe Coding 的前後端無線控制）中生存的必備技能。
 
 以下是在 **GitHub Classroom** 部署其作業 (Assignments) 的具體建議：
