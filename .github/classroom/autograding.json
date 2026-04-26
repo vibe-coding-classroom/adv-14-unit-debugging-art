@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "name": "Defensive Hardening Test (Stress Injection)",
+      "setup": "npm install",
+      "run": "node tests/malicious.test.js",
+      "input": "",
+      "output": "Auto-grading Passed",
+      "comparison": "contains",
+      "timeout": 1,
+      "points": 100
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "name": "adv-14-unit-debugging-art",
+  "version": "1.0.0",
+  "description": "The Art of Debugging Lab",
+  "main": "index.js",
+  "scripts": {
+    "test": "node tests/malicious.test.js"
+  },
+  "author": "",
+  "license": "ISC"
+}

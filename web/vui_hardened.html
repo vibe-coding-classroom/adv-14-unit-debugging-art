@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VUI Hardened - Debugging Art</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --accent: #38bdf8;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            margin: 0;
+        }
+
+        .container {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h1 { margin-top: 0; font-size: 1.5rem; color: var(--accent); }
+
+        .control-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: white;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent);
+            color: var(--bg-color);
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        button:active { transform: scale(0.98); }
+
+        /* Toast Styles */
+        #toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+
+        .toast {
+            background: var(--card-bg);
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+            border-left: 5px solid var(--accent);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .toast.error { border-left-color: var(--danger); }
+        .toast.warning { border-left-color: var(--warning); }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛡️ Defensive UI Shield</h1>
+        
+        <div class="control-group">
+            <label for="speed-input">Target Speed (0-255)</label>
+            <input type="text" id="speed-input" placeholder="Enter numeric value...">
+        </div>
+
+        <button onclick="handleSendCommand()">Send Command</button>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script>
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerText = message;
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 500);
+            }, 3000);
+        }
+
+        function handleSendCommand() {
+            const input = document.getElementById('speed-input').value;
+            
+            // TASK: Implement defensive checks here
+            // Example:
+            try {
+                if (input.trim() === "") throw "Input is empty!";
+                const val = Number(input);
+                if (isNaN(val)) throw "Input must be a number!";
+                
+                // Intentional protocol inconsistency for the student to find:
+                // They need to decide if they send "targetSpeed" or "target_speed"
+                const payload = { targetSpeed: val };
+                console.log("Sending payload:", payload);
+                showToast("Command sent successfully: " + JSON.stringify(payload));
+                
+            } catch (err) {
+                showToast("⚠️ Defense Alert: " + err, "error");
+            }
+        }
+    </script>
+</body>
+</html>
